@@ -117,17 +117,17 @@ class fdaData(object):
 
 
 class fda_DataLoader():
-    def initialize(self, S, batch_size, scale=32):
+    def initialize(self, S, batch_size, scale=32): #alle 32x32px
         transform = transforms.Compose([
             transforms.Resize(scale),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-        ])
+            transforms.ToTensor(), #Umwandeln zu Torch Tensor
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) #Bild als rgb Image gespeichert, Werte = 3 Channels, 3 Matrizen für Channel, 1. Matrix: r Werte, Mittelwert zw. rgb 0.5, std: Standardabweichung => für gleiche Farbrange
+        ])  #Daten/Bilder künstlich diverser machen durch Data Augmentation (Color Jitter, Rotate, Croppen, Sättigung (hue?), EINLESEN ..., tendenziell Domains dadurch auch ähnlicher machen)
         dataset = Dataset(S['imgs'], S['labels'], transform=transform)
         self.dataset = dataset
         data_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.fda_data = fdaData(data_loader)
-
+#Modell misst accuracy um zu schauen, wie viel Prozent der Bilder korrekt klassifiziert wurden => gucke ob Prozent besser wird
     def name(self):
         return 'fda_DataLoader'
 
