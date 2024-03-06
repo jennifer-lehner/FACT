@@ -109,8 +109,8 @@ def main():
     server_name = f"FACT {args.name}, {args.dataset}, epochs={args.epochs}, rounds={args.rounds}, " \
                   f"bs={args.batch_size}, lr={args.lr}"
 
-    source_clients = get_source_clients(args)
-    target_clients = get_target_clients(args)
+    source_clients = get_source_clients(args) #hat Daten von einer Domain
+    target_clients = get_target_clients(args) #same aber ohne Labels
     feature_model = get_dataset_specific_generator(args.dataset).to(device)
     predictor_model = get_dataset_specific_classifier(args.dataset).to(device)
 
