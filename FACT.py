@@ -4,7 +4,7 @@ import torch
 
 from client import Client
 from datasets.dataset_read import dataset_read
-from models.get_dataset_specific_models import get_dataset_specific_generator, get_dataset_specific_classifier
+from models.get_dataset_specific_models import get_dataset_specific_generator, get_dataset_specific_classifier #...generator: gibt Digit5/Office Caltech/Office #...classifier: gibt entsprechende Prediciton (Label)
 from server import Server
 from utils.setup_fl_process import dataset_domain_sample_count_mapping, get_source_and_target_domains, arg_str_to_bool
 
@@ -13,17 +13,17 @@ parser.add_argument('--dataset', type=str, default='digit-five', metavar='N',
                     choices=['office', 'office-home', 'office_caltech_10', 'digit-five', 'domainNet', 'amazon_review'])
 parser.add_argument('--target', type=str, default='', metavar='N', help='target domains (comma separated)')
 parser.add_argument('--num_iter', type=int, default=0, metavar='N', help='number of iteration for training')
-parser.add_argument('--epochs', type=int, default=1, metavar='N', help='epochs per round of training')
-parser.add_argument('--rounds', type=int, default=1000, metavar='N', help='rounds of federated learning')
-parser.add_argument('--batch_size', type=int, default=16, metavar='N', help='batch size')
+parser.add_argument('--epochs', type=int, default=1, metavar='N', help='epochs per round of training') #1 Epoch?
+parser.add_argument('--rounds', type=int, default=1000, metavar='N', help='rounds of federated learning') #1000 Runden
+parser.add_argument('--batch_size', type=int, default=16, metavar='N', help='batch size') #was ist eine Batch Size?
 parser.add_argument('--lr', type=float, default=0.001, metavar='N', help='learning rate')
 parser.add_argument('--name', type=str, default='', metavar='N', help='short description of the '
                                                                       'experiment you are running')
 parser.add_argument('--exclude_domains', type=str, default='', metavar='N', help='domains from dataset that are '
                                                                                  'excluded from training '
-                                                                                 '(comma separated)')
+                                                                                 '(comma separated)') #wieso wird etwas excluded?
 parser.add_argument('--test_target', type=str, default='yes', metavar='N', help='test target clients in each round ('
-                                                                                'yes/no)', choices=['yes', 'no'])
+                                                                                'yes/no)', choices=['yes', 'no']) #wann macht man das?
 parser.add_argument('--test_source', type=str, default='no', metavar='N', help='test source clients in each round ('
                                                                                'yes/no)', choices=['yes', 'no'])
 parser.add_argument('--remove_digits', type=str, default='', metavar='N', help='remove digits from the digit-five '
@@ -34,7 +34,7 @@ parser.add_argument('--num_identical_domain_clients', type=int, default=1, metav
 parser.add_argument('--finetune', type=str, default='yes', metavar='N', help='use finetune step (yes/no)',
                     choices=['yes', 'no'])
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu" #cuda nutzt GPUs
 
 
 def get_index_range(args, domain, i):
@@ -105,11 +105,11 @@ def main():
     args = parser.parse_args()
     torch.hub.set_dir("tmp/")
     torch.manual_seed(1)
-    print("Iteration: ", args.num_iter)
+    print("Iteration: ", args.num_iter) #args.num_iter ist default 0?
     server_name = f"FACT {args.name}, {args.dataset}, epochs={args.epochs}, rounds={args.rounds}, " \
                   f"bs={args.batch_size}, lr={args.lr}"
 
-    source_clients = get_source_clients(args) #hat Daten von einer Domain
+    source_clients = get_source_clients(args) #hat Daten von einer Domain, oben definiert
     target_clients = get_target_clients(args) #same aber ohne Labels
     feature_model = get_dataset_specific_generator(args.dataset).to(device)
     predictor_model = get_dataset_specific_classifier(args.dataset).to(device)
@@ -129,5 +129,5 @@ def main():
     server.run()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":     #??
     main()

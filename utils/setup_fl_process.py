@@ -26,7 +26,7 @@ def arg_str_to_bool(arg_str) -> bool:
     return arg_str == 'yes'
 
 
-def get_source_and_target_domains(args) -> (list[str], list[str]):
+def get_source_and_target_domains(args) -> (list[str], list[str]): #nicht ganz klar
     target_domains = []
     if args.target != '':
         target_domains = [domain.strip() for domain in args.target.split(",")]

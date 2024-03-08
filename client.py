@@ -69,7 +69,7 @@ class Client:
         self.loss = []
         self.loss_dis = []
 
-    def train_at_client(self, g_state_dict, c2_state_dict, c1_state_dict=None):
+    def train_at_client(self, g_state_dict, c2_state_dict, c1_state_dict=None): #nicht ganz klar
         print(f"Training at client: {self.name}")
 
         self.G.load_state_dict(g_state_dict)
@@ -189,7 +189,7 @@ class Client:
         discrepancy = torch.mean(torch.abs(F.softmax(out1, dim=1) - F.softmax(out2, dim=1)))
         return discrepancy
 
-    def set_optimizer(self, lr=0.001, momentum=0.9):
+    def set_optimizer(self, lr=0.001, momentum=0.9): #was ist momentum?
         self.opt_g = optim.SGD(
             self.G.parameters(), lr=lr, weight_decay=0.0005, momentum=momentum
         )
@@ -201,7 +201,7 @@ class Client:
                 self.C1.parameters(), lr=lr, weight_decay=0.0005, momentum=momentum
             )
 
-    def set_scheduler(self, which_scheduler="custom", gamma=0.9, decay_rate=0.75):
+    def set_scheduler(self, which_scheduler="custom", gamma=0.9, decay_rate=0.75): #??
         if which_scheduler == "custom":
             self.scheduler_g = CustomLRScheduler(
                 self.opt_g, total_epochs=self.epochs*self.rounds, decay_rate=decay_rate)

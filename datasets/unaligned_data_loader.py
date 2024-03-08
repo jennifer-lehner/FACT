@@ -50,7 +50,7 @@ class PairedData(object):
                     'T': B, 'T_label': B_paths}
 
 
-class UnalignedDataLoader():
+class UnalignedDataLoader(): #??
     def initialize(self, source, target, batch_size1, batch_size2, scale=32):
         transform = transforms.Compose([
             transforms.Resize(scale),

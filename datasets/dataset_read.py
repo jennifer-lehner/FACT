@@ -29,8 +29,8 @@ def digit_five_dataset_read(domain, batch_size, device, scale=False, index_range
     print(f"Load {domain}...")
     S = {}
     S_test = {}
-    train_data, train_label, test_data, test_label = return_dataset(domain, scale=scale)
-    S['imgs'] = train_data
+    train_data, train_label, test_data, test_label = return_dataset(domain, scale=scale)  #woher kommt train_data und test_data?
+    S['imgs'] = train_data #von hier?
     S['labels'] = train_label
 
     S_test['imgs'] = test_data
