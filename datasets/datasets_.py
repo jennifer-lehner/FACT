@@ -1,4 +1,6 @@
 from __future__ import print_function
+
+import PIL.Image
 import torch.utils.data as data
 from PIL import Image
 import numpy as np
@@ -34,22 +36,25 @@ class Dataset(data.Dataset):
         # doing this so that it is consistent with all other dataset illustrations
         # to return a PIL Image
         # print(img.shape)
-        if img.shape[0] != 1:
-            # print(img)
+        if img.shape[0] != 1: #gibt (3,32,32) zurück, 3 channels, 32x32 wenn Farbbild; gibt (1,32,32) zurück wenn kein Farbbild (z.B. mnist, usps)
+            #print(img)
             img = Image.fromarray(np.uint8(np.asarray(img.transpose((1, 2, 0)))))
 
         elif img.shape[0] == 1:
             im = np.uint8(np.asarray(img))
-            # print(np.vstack([im,im,im]).shape)
-            im = np.vstack([im, im, im]).transpose((1, 2, 0))
+            #print(np.vstack([im,im,im]).shape)
+            im = np.vstack([im, im, im]).transpose((1, 2, 0))  #nicht RGBs als 3 einzelne Bilder (im,im,im) als RGBs darstellen
             img = Image.fromarray(im)
 
         if self.target_transform is not None:
             target = self.target_transform(target)
         if self.transform is not None:
             img = self.transform(img)
-            # return img, target
+            return img, target
         return img, target
 
     def __len__(self):
         return len(self.data)
+
+
+#Dataset()
