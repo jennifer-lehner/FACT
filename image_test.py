@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    train_data, train_label, test_data, test_label = return_dataset('svhn', scale=False)
+    train_data, train_label, test_data, test_label = return_dataset('mnist', scale=False)
     S = {}
     S['imgs'] = train_data
     S['labels'] = train_label
@@ -24,7 +24,7 @@ def main():
     ])
     dataset = Dataset(S['imgs'], S['labels'], transform=transform) #dataset: instance, Dataset: class
 
-    # Bild vor Transform:
+# Bild vor Transform:
     # print(type(image_before))
     img = np.transpose(image_before, (1, 2, 0))
     minValue = np.amin(img)
@@ -33,11 +33,11 @@ def main():
     img = img * (1 / maxValue)
     # print(maxValue)
     # print(minValue)
-    plt.figure()  # Create a new figure
-    plt.imshow(img)  # Display the image
-    plt.show()  # Show the figure
+    #plt.figure()  # Create a new figure
+    #plt.imshow(img)  # Display the image
+    #plt.show()  # Show the figure
 
-    # Bild nach Transform:
+# Bild nach Transform:
     image_after, label = dataset.__getitem__(0)
     #print(image_after.shape)
     img2 = image_after.permute(1, 2, 0)
@@ -48,9 +48,26 @@ def main():
     img2 = img2 * (1 / maxValue)
     # print(maxValue)
     # print(minValue)
-    plt.figure()  # Create a new figure
-    plt.imshow(img2)  # Display the image
-    plt.show()   # Show the figure
+    #plt.figure()  # Create a new figure
+    #plt.imshow(img2)  # Display the image
+    #plt.show()   # Show the figure
+
+
+#Beide Bilder in einem:
+    fig = plt.figure(figsize=(10, 7))
+    # setting values to rows and column variables
+    rows = 1
+    columns = 2
+    fig.add_subplot(rows, columns, 1)  # Adds a subplot at the 1st position
+    plt.imshow(img)    # showing image before
+    #plt.axis('off')
+    plt.title('before transform')
+
+    fig.add_subplot(rows, columns, 2)  # Adds a subplot at the 2nd position
+    plt.imshow(img2)   # showing image
+    #plt.axis('off')
+    plt.title("after transform")
+    plt.show()
 
     return 0
 
