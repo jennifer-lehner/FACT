@@ -21,9 +21,9 @@ def main():
         transforms.ToTensor(),
         # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        transforms.ColorJitter(brightness=0.4, contrast=0, saturation=0.2, hue=0.3),
-        transforms.RandomAdjustSharpness(sharpness_factor=2),
-        transforms.RandomInvert()
+        transforms.ColorJitter(brightness=0.4, contrast=0.2, saturation=0, hue=0.3),
+        transforms.RandomAdjustSharpness(sharpness_factor=2, p=1),
+        transforms.RandomInvert(p=1)
     ])
     dataset = Dataset(S['imgs'], S['labels'], transform=transform) #dataset: instance, Dataset: class
 
@@ -67,7 +67,7 @@ def main():
     plt.title('before transform')
 
     fig.add_subplot(rows, columns, 2)  # Adds a subplot at the 2nd position
-    plt.imshow(img2)   # showing image
+    plt.imshow(img2)   # showing image after
     #plt.axis('off')
     plt.title("after transform")
     plt.show()
