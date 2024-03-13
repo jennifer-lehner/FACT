@@ -8,7 +8,7 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 32
     #dataset = digit_five_dataset_read('mnist', batch_size=20, device=device, index_range=range(200))
-    train_loader, test_loader = digit_five_dataset_read('mnist', batch_size, device, index_range=range(1000))
+    train_loader, test_loader = digit_five_dataset_read('mnist', batch_size, device, index_range=range(100))
 
 
     model = CombinedModel(Feature(), Predictor())
@@ -19,7 +19,7 @@ def main():
     size = 0
     num_batches = len(train_loader)
 
-    for epoch in range(50):
+    for epoch in range(10):
         for data in train_loader:
             #print(type(data))
             x, y = data  # jeweils image input und label

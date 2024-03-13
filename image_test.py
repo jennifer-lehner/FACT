@@ -14,14 +14,14 @@ def main():
     S['labels'] = train_label
 
     image_before = train_data[0]  #Hier Nummer von Bild in Datensatz ändern
-    print(image_before.shape)
+    #print(image_before.shape)
 
     transform = transforms.Compose([
         transforms.Resize(32),
         transforms.ToTensor(),
         # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        transforms.ColorJitter(brightness=0.5, contrast=0.2, saturation=0.3, hue=0.5),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        transforms.ColorJitter(brightness=0.4, contrast=0.2, saturation=0, hue=0.3),
         transforms.RandomAdjustSharpness(sharpness_factor=2, p=1),
         transforms.RandomInvert(p=1)
     ])
@@ -30,9 +30,9 @@ def main():
 # Bild vor Transform:
     # print(type(image_before))
     img = np.transpose(image_before, (1, 2, 0))
-    minValue = np.amin(img)
+    minValue = np.min(img)
     img = img - np.ones_like(img) * minValue
-    maxValue = np.amax(img)
+    maxValue = np.max(img)
     img = img * (1 / maxValue)
     # print(maxValue)
     # print(minValue)
@@ -45,9 +45,12 @@ def main():
     #print(image_after.shape)
     img2 = image_after.permute(1, 2, 0)
     img2 = img2.numpy()  # Convert the tensor to numpy for plotting
-    minValue = np.amin(img2)
+    minValue = np.min(img2)
+    #print(minValue)
+    #maxValue = np.max(img2)
+    #print(maxValue)
     img2 = img2 - np.ones_like(img2) * minValue
-    maxValue = np.amax(img2)
+    maxValue = np.max(img2)
     img2 = img2 * (1 / maxValue)
     # print(maxValue)
     # print(minValue)
