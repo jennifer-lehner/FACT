@@ -10,7 +10,7 @@ from datasets.usps_ import load_usps
 from datasets.syn import load_syn
 
 
-def return_dataset(data, scale=False):
+def return_dataset(data, scale=False, remove_digits: list | None = None):
     if data == 'svhn':
         train_image, train_label, test_image, test_label = load_svhn()
     if data == 'mnist':
@@ -22,16 +22,27 @@ def return_dataset(data, scale=False):
     if data == 'syn':
         train_image, train_label, test_image, test_label = load_syn()
 
+    if remove_digits is not None:
+        print("removing digits: ", remove_digits)
+        train_image = [image for image, label in zip(train_image, train_label) if label not in remove_digits]
+        train_label = [label for label in train_label if label not in remove_digits]
+        test_image = [image for image, label in zip(test_image, test_label) if label not in remove_digits]
+        test_label = [label for label in test_label if label not in remove_digits]
+
     return train_image, train_label, test_image, test_label
 
 
-def digit_five_dataset_read(domain, batch_size, device, scale=False, index_range=None):
+def digit_five_dataset_read(domain, batch_size, device, scale=False, index_range=None, remove_digits=None, train_labels=True):
     print(f"Load {domain}...")
     S = {}
     S_test = {}
-    train_data, train_label, test_data, test_label = return_dataset(domain, scale=scale)  #woher kommt train_data und test_data?
-    S['imgs'] = train_data #von hier?
-    S['labels'] = train_label
+    train_data, train_label, test_data, test_label = return_dataset(domain, scale=scale, remove_digits=remove_digits)
+    S['imgs'] = train_data
+    if train_labels:
+        S['labels'] = train_label
+    else:
+        train_label[:] = -404
+        S['labels'] = train_label
 
     S_test['imgs'] = test_data
     S_test['labels'] = test_label

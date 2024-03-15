@@ -8,6 +8,13 @@ from models.get_dataset_specific_models import get_dataset_specific_generator, g
 from server import Server
 from utils.setup_fl_process import dataset_domain_sample_count_mapping, get_source_and_target_domains, arg_str_to_bool
 
+
+'''
+screen -dmS digit-five_first_test sh -c 'docker run --gpus \"device=0\" --name jlehner_job1 -it --rm -u `id -u $USER` -v /sybig/home/jlehner/code/FACT:/mnt jlehner_fact python3 /mnt/FACT.py --dataset=digit-five --target=svhn --exclude_domains= --num_iter=0 --epochs=1 --rounds=10 --batch_size=128 --lr=0.005 --name=test1 --test_source=no --test_target=yes --lr_decay_rate=0.75 --num_identical_domain_clients=1 --finetune=yes; exec bash'
+screen -dmS digit-five_first_test sh -c 'docker run --gpus \"device=1\" --name jlehner_job2 -it --rm -u `id -u $USER` -v /sybig/home/jlehner/code/FACT:/mnt jlehner_fact python3 /mnt/FACT.py --dataset=digit-five --target=mnistm --exclude_domains= --num_iter=0 --epochs=1 --rounds=10 --batch_size=128 --lr=0.005 --name=test1 --test_source=no --test_target=yes --lr_decay_rate=0.75 --num_identical_domain_clients=1 --finetune=yes; exec bash'
+'''
+
+
 parser = argparse.ArgumentParser(description='PyTorch FACT Implementation')
 parser.add_argument('--dataset', type=str, default='digit-five', metavar='N',
                     choices=['office', 'office-home', 'office_caltech_10', 'digit-five', 'domainNet', 'amazon_review'])
