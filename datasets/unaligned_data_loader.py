@@ -117,12 +117,59 @@ class fdaData(object):
 
 
 class fda_DataLoader():
-    def initialize(self, S, batch_size, scale=32): #alle 32x32px
+    def initialize(self, S, batch_size, domain, scale=32):
+        transformdict = {'mnist': transforms.Compose([
+                                        transforms.Resize(scale),                       #alle 32x32px
+                                        transforms.ToTensor(),                          #Umwandeln zu Torch Tensor
+                                        transforms.ColorJitter(brightness=0.4, contrast=0, saturation=0, hue=0),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        transforms.RandomInvert(p=0.0),
+                                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                        ]),
+                        'mnistm': transforms.Compose([
+                                        transforms.Resize(scale),
+                                        transforms.ToTensor(),
+                                        transforms.ColorJitter(brightness=0, contrast=0.3, saturation=0, hue=0.1),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
+                                        transforms.RandomInvert(p=0.0),
+                                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                        ]),
+                        'svhn': transforms.Compose([
+                                        transforms.Resize(scale),
+                                        transforms.ToTensor(),
+                                        transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
+                                        transforms.RandomInvert(p=0.0),
+                                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                        ]),
+                        'syn': transforms.Compose([
+                                        transforms.Resize(scale),
+                                        transforms.ToTensor(),
+                                        transforms.ColorJitter(brightness=0, contrast=0, saturation=0.2, hue=0),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
+                                        transforms.RandomInvert(p=0.0),
+                                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                        ]),
+                        'usps': transforms.Compose([
+                                        transforms.Resize(scale),
+                                        transforms.ToTensor(),
+                                        transforms.ColorJitter(brightness=0.2, contrast=0, saturation=0, hue=0),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
+                                        transforms.RandomInvert(p=0.5),
+                                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                        ])
+
+        }
+
         transform = transforms.Compose([
             transforms.Resize(scale),
             transforms.ToTensor(), #Umwandeln zu Torch Tensor
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) #Bild als rgb Image gespeichert, Werte = 3 Channels, 3 Matrizen für Channel, 1. Matrix: r Werte, Mittelwert zw. rgb 0.5, std: Standardabweichung => für gleiche Farbrange
-        ])  #Daten/Bilder künstlich diverser machen durch Data Augmentation (Color Jitter, Rotate, Croppen, Sättigung (hue?), EINLESEN ..., tendenziell Domains dadurch auch ähnlicher machen)
+            transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
+            transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+            transforms.RandomInvert(p=1),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  #Bild als rgb Image gespeichert, Werte = 3 Channels, 3 Matrizen für Channel, 1. Matrix: r Werte, Mittelwert zw. rgb 0.5, std: Standardabweichung => für gleiche Farbrange
+
+        ])
         dataset = Dataset(S['imgs'], S['labels'], transform=transform)
         self.dataset = dataset
         data_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)

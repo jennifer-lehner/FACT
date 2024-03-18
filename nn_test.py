@@ -8,7 +8,7 @@ def main():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 32
     #dataset = digit_five_dataset_read('mnist', batch_size=20, device=device, index_range=range(200))
-    train_loader, test_loader = digit_five_dataset_read('mnist', batch_size, device, index_range=range(100), remove_digits=None)
+    train_loader, test_loader = digit_five_dataset_read('svhn', batch_size, device, index_range=range(1000), remove_digits=None)
 
 
     model = CombinedModel(Feature(), Predictor())

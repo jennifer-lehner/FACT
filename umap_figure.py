@@ -12,7 +12,7 @@ def main():
                                                         remove_digits=[1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     mnist_images, _ = next(iter(train_loader))
-    mnist_images = mnist_images.reshape(20,3*32*32)
+    mnist_images = mnist_images.reshape(20, 3*32*32)  # change here first number to index range
 
     print(mnist_images.shape)
 

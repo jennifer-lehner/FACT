@@ -51,10 +51,10 @@ def digit_five_dataset_read(domain, batch_size, device, scale=False, index_range
     size_train = len(train_label)
     size_test = len(test_label)
     train_loader = fda_DataLoader()
-    train_loader.initialize(S, size_train, scale)
+    train_loader.initialize(S, size_train, domain, scale)
     dataset = train_loader.load_data()
     test_loader = fda_DataLoader()
-    test_loader.initialize(S_test, size_test, scale)
+    test_loader.initialize(S_test, size_test, domain, scale)
     dataset_test = test_loader.load_data()
 
     for x_train, y_train in dataset.data_loader:
