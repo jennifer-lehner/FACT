@@ -121,41 +121,41 @@ class fda_DataLoader():
         transformdict = {'mnist': transforms.Compose([
                                         transforms.Resize(scale),                       #alle 32x32px
                                         transforms.ToTensor(),                          #Umwandeln zu Torch Tensor
-                                        transforms.ColorJitter(brightness=0.4, contrast=0, saturation=0, hue=0),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
-                                        transforms.RandomInvert(p=0.0),
+                                        transforms.ColorJitter(brightness=0.621, contrast=0, saturation=0, hue=0),
+                                        #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'mnistm': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0.3, saturation=0, hue=0.1),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
-                                        transforms.RandomInvert(p=0.0),
+                                        transforms.ColorJitter(brightness=0, contrast=0.093, saturation=0, hue=0),
+                                        #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'svhn': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
-                                        transforms.RandomInvert(p=0.0),
+                                        #transforms.ColorJitter(brightness=0, contrast=0.2, saturation=0, hue=0),
+                                        #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'syn': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0, saturation=0.2, hue=0),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
-                                        transforms.RandomInvert(p=0.0),
+                                        transforms.ColorJitter(brightness=0, contrast=0.572, saturation=0.196, hue=0),
+                                        #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'usps': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0.2, contrast=0, saturation=0, hue=0),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.0),
-                                        transforms.RandomInvert(p=0.5),
+                                        transforms.ColorJitter(brightness=0, contrast=0.538, saturation=0, hue=0.335),
+                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ])
 
@@ -164,13 +164,13 @@ class fda_DataLoader():
         transform = transforms.Compose([
             transforms.Resize(scale),
             transforms.ToTensor(), #Umwandeln zu Torch Tensor
-            transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
-            transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
-            transforms.RandomInvert(p=1),
+            #transforms.ColorJitter(brightness=1, contrast=1, saturation=1, hue=0.5),
+            #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+            #transforms.RandomInvert(p=0.5),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  #Bild als rgb Image gespeichert, Werte = 3 Channels, 3 Matrizen für Channel, 1. Matrix: r Werte, Mittelwert zw. rgb 0.5, std: Standardabweichung => für gleiche Farbrange
 
         ])
-        dataset = Dataset(S['imgs'], S['labels'], transform=transform)
+        dataset = Dataset(S['imgs'], S['labels'], transform=transformdict[domain])  #transformdict[domain]
         self.dataset = dataset
         data_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.fda_data = fdaData(data_loader)
