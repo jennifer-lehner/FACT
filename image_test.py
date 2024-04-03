@@ -4,11 +4,37 @@ from torchvision.transforms import transforms
 from datasets.dataset_read import return_dataset
 from datasets.datasets_ import Dataset
 import matplotlib.pyplot as plt
+import torch.nn.functional as F
 
+def crop_center_and_pad_tensor(img_tensor):
+    # Get the dimensions of the image tensor
+    _, height, width = img_tensor.size()
 
+    # Define the dimensions for the cropped image
+    new_width = 11 #32px-32px * 2/factor for padding on each sides, e.g. factor = 3 for 1/3 cropped left and right
+    new_height = height
+
+    # Calculate the area to crop
+    left = (width - new_width)//2
+    top = (height - new_height)//2
+    right = (width + new_width)//2
+    bottom = (height + new_height)//2
+
+    # Crop the image tensor
+    img_cropped = img_tensor[:, top:bottom, left:right]
+
+    # Calculate padding dimensions
+    pad_left = (width - new_width) // 2
+    pad_right = width - new_width - pad_left
+    pad_top = pad_bottom = 0
+
+    # Pad the image tensor
+    img_padded = F.pad(img_cropped, (pad_left, pad_right), value=0)
+
+    return img_padded
 
 def main():
-    train_data, train_label, test_data, test_label = return_dataset('mnistm', scale=False)
+    train_data, train_label, test_data, test_label = return_dataset('svhn', scale=False)
     S = {}
     S['imgs'] = train_data
     S['labels'] = train_label
@@ -19,8 +45,9 @@ def main():
     transform = transforms.Compose([
         transforms.Resize(32),
         transforms.ToTensor(),
+        crop_center_and_pad_tensor,
         # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-        transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0.4),
+        #transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0.4),
         #transforms.RandomInvert(p=1),
         #transforms.RandomAdjustSharpness(sharpness_factor=2, p=1),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))

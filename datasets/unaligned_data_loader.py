@@ -1,7 +1,7 @@
 import torch.utils.data
 from builtins import object
 import torchvision.transforms as transforms
-
+import torch.nn.functional as F
 from datasets.datasets_ import Dataset
 
 
@@ -116,45 +116,76 @@ class fdaData(object):
         return len(self.data_loader)
 
 
+def crop_center_and_pad_tensor(img_tensor):
+    # Get the dimensions of the image tensor
+    _, height, width = img_tensor.size()
+
+    # Define the dimensions for the cropped image
+    new_width = 11
+    new_height = height
+
+    # Calculate the area to crop
+    left = (width - new_width)//2
+    top = (height - new_height)//2
+    right = (width + new_width)//2
+    bottom = (height + new_height)//2
+
+    # Crop the image tensor
+    img_cropped = img_tensor[:, top:bottom, left:right]
+
+    # Calculate padding dimensions
+    pad_left = (width - new_width) // 2
+    pad_right = width - new_width - pad_left
+    pad_top = pad_bottom = 0
+
+    # Pad the image tensor
+    img_padded = F.pad(img_cropped, (pad_left, pad_right), value=0)
+
+    return img_padded
+
 class fda_DataLoader():
     def initialize(self, S, batch_size, domain, scale=32):
         transformdict = {'mnist': transforms.Compose([
                                         transforms.Resize(scale),                       #alle 32x32px
                                         transforms.ToTensor(),                          #Umwandeln zu Torch Tensor
-                                        transforms.ColorJitter(brightness=0.621, contrast=0, saturation=0, hue=0),
+                                        #transforms.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0.133),
                                         #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
-                                        transforms.RandomInvert(p=0.5),
+                                        #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'mnistm': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0.093, saturation=0, hue=0),
+                                        #transforms.ColorJitter(brightness=0, contrast=0.3, saturation=0, hue=0),
                                         #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
-                                        transforms.RandomInvert(p=0.5),
+                                        #transforms.RandomInvert(p=0.5),
+                                        #transforms.Grayscale(num_output_channels=3),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'svhn': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        #transforms.ColorJitter(brightness=0, contrast=0.2, saturation=0, hue=0),
+                                        crop_center_and_pad_tensor,
+                                        #transforms.ColorJitter(brightness=1.0, contrast=0, saturation=0, hue=0),
                                         #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        #transforms.Grayscale(num_output_channels=3),
                                         #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'syn': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0.572, saturation=0.196, hue=0),
+                                        #transforms.ColorJitter(brightness=0.6, contrast=0, saturation=0, hue=0),
                                         #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
                                         #transforms.RandomInvert(p=0.5),
+                                        #transforms.Grayscale(num_output_channels=3),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ]),
                         'usps': transforms.Compose([
                                         transforms.Resize(scale),
                                         transforms.ToTensor(),
-                                        transforms.ColorJitter(brightness=0, contrast=0.538, saturation=0, hue=0.335),
-                                        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
+                                        #transforms.ColorJitter(brightness=0, contrast=0.716, saturation=0, hue=0),
+                                        #transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
                                         #transforms.RandomInvert(p=0.5),
                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                         ])
